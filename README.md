@@ -1,55 +1,30 @@
-# speech-audio-cleanup-pipeline
+# Speech Audio Cleanup Pipeline
 
-This project demonstrates a simple audio processing workflow for preparing speech recordings for voice systems, IVR prompts, and speech datasets.
+This project demonstrates a simple workflow for preparing speech audio recordings for voice systems, IVR prompts, and speech datasets.
 
-The goal is to apply standard audio engineering practices (EQ, compression, loudness normalization) in a repeatable pipeline that can process multiple recordings consistently.
+The goal is to apply standard audio engineering practices such as loudness normalization, EQ, and compression in a repeatable process that ensures consistent voice quality.
 
-This type of processing is useful when preparing:
-
-- IVR voice prompts
-- speech datasets
-- podcast or narration audio
-- TTS training audio
-
-## Processing Steps
-
-The pipeline performs the following operations:
+## Typical Processing Steps
 
 1. Normalize loudness
 2. Apply EQ to improve vocal clarity
 3. Apply compression to stabilize dynamics
-4. Optional de-essing
-5. Export processed audio
+4. Export clean audio
 
-These steps help maintain consistent voice quality across recordings from different environments.
+These steps are commonly used when preparing recordings for:
 
-## Example Workflow
-
-Input folder: input_audio/
-
-
-Output folder: processed_audio/
-
-Run the script: python process_audio.py
-
-All recordings in the input folder will be processed and exported.
-
-## Example Use Cases
-
-Speech AI training datasets
-Voice assistant recordings
-Telephony / IVR systems
-Podcast voice cleanup
-
-## Tools Used
-
-Python
-FFmpeg
-Basic DSP concepts from audio engineering workflows
+• IVR systems  
+• voice assistants  
+• speech datasets  
+• TTS training audio  
 
 ## Motivation
 
-In speech AI systems, small differences in recording quality can affect both model performance and user experience.
+Small differences in recording quality can affect both user experience and model performance in voice AI systems.
 
-This project explores how traditional audio engineering techniques can be translated into automated pipelines that maintain consistent voice quality across large sets of recordings.
-}
+This project explores how traditional audio engineering practices can be applied consistently across many recordings.
+
+## Author
+
+Maria X. Boyrie  
+Audio Engineer | Speech Audio Processing
