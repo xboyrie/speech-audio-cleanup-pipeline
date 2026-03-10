@@ -12,23 +12,32 @@ def remove_dc(audio):
     return audio - np.mean(audio)
 
 
-def highpass(audio, samplerate, cutoff=120):
-    dt = 1.0 / samplerate
+def highpass(audio, samplerate, cutoff=100):
     rc = 1.0 / (2 * np.pi * cutoff)
+    dt = 1.0 / samplerate
     alpha = rc / (rc + dt)
 
     filtered = np.zeros_like(audio)
+    filtered[0] = audio[0]
 
     for i in range(1, len(audio)):
         filtered[i] = alpha * (filtered[i-1] + audio[i] - audio[i-1])
 
-    # run filter twice for steeper slope
-    second_pass = np.zeros_like(filtered)
+    return filtered
 
-    for i in range(1, len(filtered)):
-        second_pass[i] = alpha * (second_pass[i-1] + filtered[i] - filtered[i-1])
 
-    return second_pass
+def lowpass(audio, samplerate, cutoff=7000):
+    rc = 1.0 / (2 * np.pi * cutoff)
+    dt = 1.0 / samplerate
+    alpha = dt / (rc + dt)
+
+    filtered = np.zeros_like(audio)
+    filtered[0] = audio[0]
+
+    for i in range(1, len(audio)):
+        filtered[i] = filtered[i-1] + alpha * (audio[i] - filtered[i-1])
+
+    return filtered
 
 
 def rms_normalize(audio, target_db=-16):
@@ -42,13 +51,8 @@ def rms_normalize(audio, target_db=-16):
     return audio * gain
 
 
-def gentle_noise_reduction(audio):
-    threshold = np.percentile(np.abs(audio), 10)
-    reduction = np.where(np.abs(audio) < threshold, audio * 0.5, audio)
-    return reduction
-
-
 for filename in os.listdir(INPUT_FOLDER):
+
     if filename.endswith(".wav"):
 
         input_path = os.path.join(INPUT_FOLDER, filename)
@@ -61,8 +65,14 @@ for filename in os.listdir(INPUT_FOLDER):
             audio = np.mean(audio, axis=1)
 
         audio = remove_dc(audio)
-        audio = highpass(audio, samplerate)
-        audio = gentle_noise_reduction(audio)
+
+        # remove rumble
+        audio = highpass(audio, samplerate, cutoff=100)
+
+        # reduce hiss
+        audio = lowpass(audio, samplerate, cutoff=7000)
+
+        # normalize loudness
         audio = rms_normalize(audio)
 
         # prevent clipping
@@ -71,5 +81,6 @@ for filename in os.listdir(INPUT_FOLDER):
             audio = audio / peak
 
         sf.write(output_path, audio, samplerate)
+
 
 print("Processing complete.")
