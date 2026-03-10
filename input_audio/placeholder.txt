@@ -1,1 +1,0 @@
-Copy your unprocessed audio file into this folder.
