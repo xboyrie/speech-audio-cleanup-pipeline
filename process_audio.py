@@ -12,7 +12,7 @@ def remove_dc(audio):
     return audio - np.mean(audio)
 
 
-def highpass(audio, samplerate, cutoff=100):
+def highpass(audio, samplerate, cutoff=120):
     rc = 1.0 / (2 * np.pi * cutoff)
     dt = 1.0 / samplerate
     alpha = rc / (rc + dt)
@@ -37,7 +37,7 @@ def rms_normalize(audio, target_db=-16):
     return audio * gain
 
 
-def lowpass(audio, samplerate, cutoff=4000):
+def lowpass(audio, samplerate, cutoff=3600):
     rc = 1.0 / (2 * np.pi * cutoff)
     dt = 1.0 / samplerate
     alpha = dt / (rc + dt)
@@ -79,7 +79,7 @@ for filename in os.listdir(INPUT_FOLDER):
             audio = audio / peak
 
         # remove hiss (final stage)
-        audio = lowpass(audio, samplerate, cutoff=5000)
+        audio = lowpass(audio, samplerate, cutoff=3600)
 
         sf.write(output_path, audio, samplerate)
 
