@@ -37,7 +37,7 @@ def rms_normalize(audio, target_db=-16):
     return audio * gain
 
 
-def lowpass(audio, samplerate, cutoff=5000):
+def lowpass(audio, samplerate, cutoff=4000):
     rc = 1.0 / (2 * np.pi * cutoff)
     dt = 1.0 / samplerate
     alpha = dt / (rc + dt)
