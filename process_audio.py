@@ -64,13 +64,11 @@ for filename in os.listdir(INPUT_FOLDER):
         if len(audio.shape) > 1:
             audio = np.mean(audio, axis=1)
 
+        # remove DC offset
         audio = remove_dc(audio)
 
         # remove rumble
         audio = highpass(audio, samplerate, cutoff=100)
-
-        # reduce hiss
-        audio = lowpass(audio, samplerate, cutoff=7000)
 
         # normalize loudness
         audio = rms_normalize(audio)
@@ -79,6 +77,9 @@ for filename in os.listdir(INPUT_FOLDER):
         peak = np.max(np.abs(audio))
         if peak > 1:
             audio = audio / peak
+
+        # remove hiss (final stage)
+        audio = lowpass(audio, samplerate, cutoff=5000)
 
         sf.write(output_path, audio, samplerate)
 
