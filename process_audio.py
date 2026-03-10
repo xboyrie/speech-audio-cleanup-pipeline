@@ -26,6 +26,17 @@ def highpass(audio, samplerate, cutoff=100):
     return filtered
 
 
+def rms_normalize(audio, target_db=-16):
+    rms = np.sqrt(np.mean(audio**2))
+    if rms == 0:
+        return audio
+
+    current_db = 20 * np.log10(rms)
+    gain = 10 ** ((target_db - current_db) / 20)
+
+    return audio * gain
+
+
 def lowpass(audio, samplerate, cutoff=5000):
     rc = 1.0 / (2 * np.pi * cutoff)
     dt = 1.0 / samplerate
@@ -38,17 +49,6 @@ def lowpass(audio, samplerate, cutoff=5000):
         filtered[i] = filtered[i-1] + alpha * (audio[i] - filtered[i-1])
 
     return filtered
-
-
-def rms_normalize(audio, target_db=-16):
-    rms = np.sqrt(np.mean(audio**2))
-    if rms == 0:
-        return audio
-
-    current_db = 20 * np.log10(rms)
-    gain = 10 ** ((target_db - current_db) / 20)
-
-    return audio * gain
 
 
 for filename in os.listdir(INPUT_FOLDER):
