@@ -26,7 +26,7 @@ def highpass(audio, samplerate, cutoff=100):
     return filtered
 
 
-def lowpass(audio, samplerate, cutoff=7000):
+def lowpass(audio, samplerate, cutoff=5000):
     rc = 1.0 / (2 * np.pi * cutoff)
     dt = 1.0 / samplerate
     alpha = dt / (rc + dt)
