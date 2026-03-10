@@ -12,18 +12,23 @@ def remove_dc(audio):
     return audio - np.mean(audio)
 
 
-def highpass(audio, samplerate, cutoff=80):
-    rc = 1.0 / (cutoff * 2 * np.pi)
+def highpass(audio, samplerate, cutoff=120):
     dt = 1.0 / samplerate
+    rc = 1.0 / (2 * np.pi * cutoff)
     alpha = rc / (rc + dt)
 
     filtered = np.zeros_like(audio)
-    filtered[0] = audio[0]
 
     for i in range(1, len(audio)):
         filtered[i] = alpha * (filtered[i-1] + audio[i] - audio[i-1])
 
-    return filtered
+    # run filter twice for steeper slope
+    second_pass = np.zeros_like(filtered)
+
+    for i in range(1, len(filtered)):
+        second_pass[i] = alpha * (second_pass[i-1] + filtered[i] - filtered[i-1])
+
+    return second_pass
 
 
 def rms_normalize(audio, target_db=-16):
